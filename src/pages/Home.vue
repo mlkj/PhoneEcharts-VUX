@@ -32,11 +32,11 @@ import {
 const baseList = [
   {
     img: require("../assets/logo_left.jpg"),
-    title: "称重管理"
+    title: "预警信息"
   },
   {
     img: require("../assets/logo_center.jpg"),
-    title: "钢筋核算"
+    title: "收发信息"
   },
   {
     img: require("../assets/logo_right.jpg"),
@@ -68,9 +68,7 @@ export default {
         { title: "收发信息", src: require("../assets/applay.png") },
         { title: "库存信息", src: require("../assets/totalcount.png") },
         { title: "混凝土核算", src: require("../assets/PDA.png") },
-        { title: "钢筋核算", src: require("../assets/prepared.png") },
-        // { title: "综合分析", src: require("../assets/countwar.png") },
-        // { title: "集中采购分析", src: require("../assets/monthcount.png") },
+        { title: "钢筋核算", src: require("../assets/prepared.png") }
       ],
       report: [
         { name: "实现与物资管理信息系统数据交互" },

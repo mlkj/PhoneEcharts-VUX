@@ -4,10 +4,11 @@
     <div class="search_Icon">
       <i class="icon-search-menu" @click="setFocus"></i>
     </div>
-    <group v-show="!coverShow">
+    <group  v-show="!coverShow">
+    <x-switch title="切换报表" v-model="show"></x-switch>
     <selector  placeholder="请选择项目部" title="项目部" :options="list" v-model="selectNode" @on-change="onChange"></selector>
   </group>
-    <div class="wrappers" ref="wrapper" v-show="coverShow">
+    <div class="wrappers" ref="wrapper" v-show="coverShow&&show">
       <x-table class="tablelist" full-bordered>
         <thead>
           <tr class="tablelist-th">
@@ -31,31 +32,46 @@
       </x-table>
       <load-more style="margin-top:22%;" :show-loading="false" v-show="detail.length == 0" tip="暂无数据..." background-color="#fbf9fe"></load-more>
     </div>
+      <div v-show="!show&&coverShow">
+    <group>
+    <x-switch title="切换报表" v-model="show"></x-switch>
+  </group>
+   <ve-histogram  :data="chartData" :settings="chartSettings"></ve-histogram>
+  </div>
   </div>
 </template>
 <script>
-import { Selector, Group, XTable, LoadMore } from "vux";
+import { Selector, Group, XTable, LoadMore, XSwitch } from "vux";
 import api from "api/procCommand";
 import { mapGetters } from "vuex";
 import BScroll from "better-scroll";
-import  {inputModel} from 'api/inputmodel';
-
+import { inputModel } from "api/inputmodel";
 
 export default {
   components: {
     Selector,
     Group,
     XTable,
-    LoadMore
+    LoadMore,
+    XSwitch
   },
   data() {
     return {
+      chartData: {
+        columns: ["类别", "账面库存", "开累收料", "开累发料"],
+        rows: []
+      },
+      chartSettings: {
+        metrics: ["账面库存", "开累收料", "开累发料"],
+        showLine: ["开累收料"]
+      },
+      show: false,
       selectNode: "",
       nameSize: "",
       list: [],
       isLink: true,
       coverShow: true,
-       mainInput:new inputModel(),
+      mainInput: new inputModel(),
       detail: [],
       orderModel: {
         firstKeys: "OrgId",
@@ -112,7 +128,8 @@ export default {
     },
     _fetchData() {
       var that = this;
-          that.detail = [];
+      that.detail = [];
+      that.chartData.rows = [];
       let pars = that.orderModel;
       api.requestProcCommand(pars).then(
         response => {
@@ -120,6 +137,13 @@ export default {
           for (let index = 0; index < array.length; index++) {
             const element = array[index];
             if (element.isLeaf) {
+              var obj = {
+                类别: element.tjClassName,
+                账面库存: element.kcQuantity,
+                开累收料: element.klReceiveQuantity,
+                开累发料: element.klDeliveryQuantity
+              };
+              that.chartData.rows.push(obj);
               that.detail.push(element);
             }
           }

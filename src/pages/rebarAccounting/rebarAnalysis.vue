@@ -8,7 +8,7 @@
   </group>
     <div class="wrappers" ref="wrapper" v-show="coverShow">
       <x-table class="tablelist" full-bordered>
-        <thead>
+        <thead> 
           <tr class="tablelist-th">
             <th>材料名称</th>
             <th>计划总量</th>
@@ -76,10 +76,10 @@ export default {
        this.detail=[]
     let array=[
           {name:'普通硅酸盐水泥',quantity:'400',receiveQuantity:'343',jcblStr:'0',jc:''},
-          {name:'混凝土',quantity:'542',receiveQuantity:'460',jcblStr:'0',jc:''},
+          {name:'混凝土',quantity:'542',receiveQuantity:'60',jcblStr:'0',jc:''},
           {name:'座椅坐垫蒙面',quantity:'429',receiveQuantity:'326',jcblStr:'0',jc:''},
           {name:'银亮钢丝',quantity:'98',receiveQuantity:'89',jcblStr:'0',jc:''},
-          {name:'铸铁气焊丝',quantity:'155',receiveQuantity:'111',jcblStr:'0',jc:''},
+          {name:'铸铁气焊丝',quantity:'155',receiveQuantity:'11',jcblStr:'0',jc:''},
       ]
       for (let index = 0; index < array.length; index++) {
             let element = array[index];
@@ -108,7 +108,7 @@ export default {
           {name:'薄钢板',quantity:'290',receiveQuantity:'260',jcblStr:'0',jc:''},
           {name:'混凝土',quantity:'289',receiveQuantity:'215',jcblStr:'0',jc:''},
           {name:'普通硅酸盐水泥',quantity:'268',receiveQuantity:'159',jcblStr:'0',jc:''},
-          {name:'银亮钢丝',quantity:'420',receiveQuantity:'311',jcblStr:'0',jc:''},
+          {name:'银亮钢丝',quantity:'110',receiveQuantity:'31',jcblStr:'0',jc:''},
       ]
       for (let index = 0; index < array.length; index++) {
             let element = array[index];

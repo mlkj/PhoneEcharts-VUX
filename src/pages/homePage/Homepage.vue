@@ -46,16 +46,6 @@ export default {
        case "收发信息":
         this.menuGrid =[
             {
-              link: "/poundRecieve",
-              label: "过磅收料",
-              src: require("../../assets/details.png")
-            },
-            {
-              link: "/PDARecieve",
-              label: "PDA收料",
-              src: require("../../assets/totalcount.png")
-            },
-            {
               link: "/concreteInfo",
               label: "混凝土收发信息",
               src: require("../../assets/concrete.png")
@@ -64,6 +54,20 @@ export default {
               link: "/rebarInfo",
               label: "钢筋发放信息",
               src: require("../../assets/number.png")
+            },
+            {
+              link: "/turnoverMaterials",
+              label: "周转材料管理",
+              src: require("../../assets/monthcount.png")
+            },            {
+              link: "/poundRecieve",
+              label: "过磅收料",
+              src: require("../../assets/details.png")
+            },
+            {
+              link: "/PDARecieve",
+              label: "PDA收料",
+              src: require("../../assets/totalcount.png")
             }
           ];
         break;
@@ -92,6 +96,11 @@ export default {
         break;
          case "混凝土核算":
         this.menuGrid = [
+             {
+              link: "/stockInventory",
+              label: "料位库存",
+              src: require("../../assets/detail.png")
+            },
             {
               link: "/concreteAnalysis",
               label: "混凝土节超分析",
@@ -118,29 +127,7 @@ export default {
             }
           ];
         break;
-        // case "综合分析":
-        // this.menuGrid = [
-        //     {
-        //       link: "/recieveWarning",
-        //       label: "工程类型分析",
-        //       src: require("../../assets/details.png")
-        //     },
-        //     {
-        //       link: "/deliveryWarning",
-        //       label: "区域分析",
-        //       src: require("../../assets/logon.png")
-        //     }
-        //   ];
-        // break;
-        // case "集中采购分析":
-        // this.menuGrid = [
-        //     {
-        //       link: "/recieveWarning",
-        //       label: "采购分析",
-        //       src: require("../../assets/totalcount.png")
-        //     }
-        //   ];
-        // break;
+        
 
       default:
         break;

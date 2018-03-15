@@ -1,14 +1,12 @@
 <template>
     <div>
-     <div class="search_Icon">
-      <i class="icon-search-text" @click="_onConfirm">{{titleName}}</i>
-    </div>
+       <x-button mini plain type="primary" style="display: block;float:right;margin:-38px 2px 1px;" @click.native="_onConfirm">{{titleName}}</x-button>
         <flexbox>
                 <flexbox-item>
-                    <x-button v-if="!show" mini type="primary" :gradients="['#1D62F0', '#19D5FD']" @click.native="changeType">切换图表类型</x-button>
+                    <x-button v-show="show" mini type="primary" :gradients="['#1D62F0', '#19D5FD']" @click.native="changeType">切换图表类型</x-button>
                 </flexbox-item>
             </flexbox>
-            <div v-show="show" class="wrappers" ref="wrapper">
+            <div v-show="!show" class="wrappers" ref="wrapper">
                   <x-table class="tablelist" full-bordered> 
                     <thead>
                         <tr class="tablelist-th">
@@ -32,7 +30,7 @@
                 </x-table>
                 <load-more style="margin-top:22%;" :show-loading="false" v-show="itemsModel.length == 0"  tip="暂无数据..." background-color="#fbf9fe"></load-more>
             </div>
-        <ve-chart v-if="!show" :data="chartData" :settings="chartSettings" tooltip-visible legend-visible></ve-chart>
+        <ve-chart v-show="show" :data="chartData" :settings="chartSettings" tooltip-visible legend-visible></ve-chart>
     </div>
 </template>  
 <script>
@@ -40,7 +38,6 @@ import { XButton, Flexbox, FlexboxItem, XSwitch, XTable, LoadMore } from "vux";
 import api from "api/procCommand";
 import { mapGetters } from "vuex";
 import BScroll from "better-scroll";
-
 
 export default {
   components: {
@@ -53,16 +50,16 @@ export default {
   },
   data() {
     return {
-      titleName:'图表',
-      nameSize:'',
-      itemsModel:[],
+      titleName: "报表",
+      nameSize: "",
+      itemsModel: [],
       show: true,
       switchType: false,
-      typeArr: ["pie", "histogram", "line"],
+      typeArr: ["histogram", "pie", "line"],
       index: 0,
       chartSettings: {},
       chartData: {
-        columns: ["类别", "计划金额","发料金额"],
+        columns: ["类别", "计划金额", "发料金额"],
         rows: []
       },
       orderModel: {
@@ -83,29 +80,40 @@ export default {
     $route: "_initEchart"
   },
   methods: {
-    _clickName(){
-      if (this.nameSize=='') {
-      this.nameSize={'font-size':'4px'}
-      }else{
-         this.nameSize=''
+    _clickName() {
+      if (this.nameSize == "") {
+        this.nameSize = { "font-size": "4px" };
+      } else {
+        this.nameSize = "";
       }
     },
-  _initScroll() {
+    _initScroll() {
       this.scroll = new BScroll(this.$refs.wrapper, {
         click: true
       });
     },
     _initEchart() {
       var that = this;
-      that.itemsModel=[]
+      that.itemsModel = [];
+      that.chartData.rows = [];
       let pars = that.orderModel;
       api.requestProcCommand(pars).then(
         response => {
           let array = response.result.items[0];
           for (let index = 0; index < array.length; index++) {
             const element = array[index];
-            if (element.slevel==3) {
-              that.itemsModel.push(element)
+            if (element.isLeaf) {
+              var obj = {
+                类别: element.tjClassName,
+                计划金额: element.planSum,
+                发料金额: element.klReceiveSum,
+                本月值: element.currMonReceiveSum
+              };
+              that.chartData.rows.push(obj);
+              that.index = 0;
+              that.chartSettings = { type: that.typeArr[that.index] };
+
+              that.itemsModel.push(element);
             }
           }
           this.$nextTick(() => {
@@ -118,23 +126,11 @@ export default {
       );
     },
     _onConfirm() {
-      this.chartData.rows = [];
-      for (var i = 0; i < this.itemsModel.length; i++) {
-       var obj = {
-              类别: this.itemsModel[i].tjClassName,
-              计划金额: this.itemsModel[i].planSum,
-              发料金额: this.itemsModel[i].klReceiveSum,
-              本月值: this.itemsModel[i].currMonReceiveSum
-            };
-            this.chartData.rows.push(obj);
-            this.index=0;
-          this.chartSettings = { type: this.typeArr[this.index] };
-      }
-      if (this.titleName=="图表") {
-        this.titleName="报表"
+      if (this.titleName == "报表") {
+        this.titleName = "图表";
         this.show = false;
       } else {
-        this.titleName="图表"
+        this.titleName = "报表";
         this.show = true;
       }
     },
@@ -150,9 +146,7 @@ export default {
     this.orderModel.firstValues = "#" + this.userInfo.user.manageOrgId + "#";
     this._initEchart();
   },
-  mounted() {
-
-  }
+  mounted() {}
 };
 </script> 
 

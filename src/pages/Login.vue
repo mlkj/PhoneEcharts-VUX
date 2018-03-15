@@ -13,6 +13,7 @@
             </div>
         </x-dialog>
         <x-header :left-options="{showBack: false}" @on-click-more="onClickMore" :right-options="{showMore:true}" :title="headTitle" style="width:100%;position:absolute;left:0;top:0;"></x-header>
+        <qrcode style="margin:8px 15px;" :value="qrURL" :size="smallSize" @click.native="showQrcode=true"></qrcode>
         <div style="text-align:center;margin-top:5px;">
             <img src="../assets/logo_img.png"/>
         </div>
@@ -28,6 +29,13 @@
         <div style="padding:15px;">
             <x-button  @click.native="_login" type="primary" :gradients="['#35495e', '#19D5FD']" text="登 录"></x-button>
         </div>
+        <x-dialog v-model="showQrcode" hide-on-blur :dialog-style="{'max-width': '95%',width: '90%',height: '68%'}">
+          <divider>大桥物资</divider>
+          <qrcode style="margin-top:5px;" :value="qrURL" :size="largeSize"></qrcode>
+        <div style="margin:10px;">
+          <divider>扫一扫上面的二维码图案,登陆</divider>
+        </div>
+        </x-dialog>
     </div>
 </template>
  
@@ -38,21 +46,27 @@ import { mapActions } from "vuex";
 import api from "api/login";
 import qs from "qs";
 
-import { XDialog, XInput, Group, XButton, XHeader, cookie } from "vux";
+import { XDialog, XInput, Group, XButton, XHeader, cookie,Qrcode, Divider } from "vux";
 export default {
   components: {
+    Qrcode,
     XDialog,
     XInput,
     XButton,
     Group,
-    XHeader
+    XHeader, Divider
   },
   data() {
     return {
+      qrURL:'http://117.34.112.55:8089',
+      smallSize:30,
+      largeSize:230,
+      // qrURL:'http://192.168.20.18:8080',
       passwordType: "password",
       headTitle: "大桥物资信息系统",
       baseURL: "",
       showScrollBox: false,
+      showQrcode:false,
       inputPassWord: "aaa",
       loginForm: {
         userName: "yl1",

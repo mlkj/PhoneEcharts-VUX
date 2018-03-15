@@ -4,9 +4,10 @@
       <i class="icon-search-menu" @click="setFocus"></i>
     </div>
     <group  v-show="!coverShow">
+    <x-switch title="切换报表" v-model="show"></x-switch>
     <selector placeholder="请选择项目部" title="项目部" :options="list" v-model="selectNode" @on-change="onChange"></selector>
   </group>
-    <div class="wrappers" ref="wrapper" v-show="coverShow">
+    <div class="wrappers" ref="wrapper" v-show="coverShow&&show">
       <x-table class="tablelist" full-bordered>
         <thead>
           <tr class="tablelist-th">
@@ -30,10 +31,21 @@
       </x-table>
       <load-more style="margin-top:22%;" :show-loading="false" v-show="detail.length == 0" tip="暂无数据..." background-color="#fbf9fe"></load-more>
     </div>
+  <div v-show="!show&&coverShow">
+    <group>
+    <x-switch title="切换报表" v-model="show"></x-switch>
+  </group>
+   <ve-histogram  :data="chartData" :settings="chartSettings"></ve-histogram>
+  </div>
   </div>
 </template>
 <script>
-import { Selector, Group, XTable, LoadMore } from "vux";
+function per2num(per) {
+  return per.replace(/([0-9.]+)%/, function(a, b) {
+    return +b / 100;
+  });
+}
+import { Selector, Group, XTable, LoadMore, XSwitch } from "vux";
 import api from "api/procCommand";
 import { mapGetters } from "vuex";
 import BScroll from "better-scroll";
@@ -42,12 +54,23 @@ import { inputModel } from "api/inputmodel";
 export default {
   components: {
     Selector,
+    XSwitch,
     Group,
     XTable,
     LoadMore
   },
   data() {
     return {
+      chartData: {
+        columns: ["类别", "计划总量", "开累收料", "占比"],
+        rows: []
+      },
+      chartSettings: {
+        axisSite: { right: ["占比"] },
+        yAxisType: ["KMB", "percent"],
+        yAxisName: ["数值", "比率"]
+      },
+      show: false,
       detail: [],
       selectNode: "",
       nameSize: "",
@@ -111,6 +134,7 @@ export default {
     _fetchData() {
       var that = this;
       that.detail = [];
+      that.chartData.rows = [];
       let pars = that.orderModel;
       api.requestProcCommand(pars).then(
         response => {
@@ -118,6 +142,14 @@ export default {
           for (let index = 0; index < array.length; index++) {
             const element = array[index];
             if (element.isLeaf) {
+              var obj = {
+                类别: element.tjClassName,
+                计划总量: element.planQuantity,
+                开累收料: element.receiveQuantity,
+                占比: per2num(element.jcblStr)
+              };
+              that.chartData.rows.push(obj);
+
               that.detail.push(element);
             }
           }

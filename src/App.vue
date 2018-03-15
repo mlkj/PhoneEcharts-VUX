@@ -10,9 +10,10 @@
       <!-- drawer content -->
       <div slot="drawer">
         <div class="y_nav_h" v-if="userInfo">
-          <img src="./assets/user.png"/>
-          <span style="display:inline-block;color:rgb(255, 255, 255);">{{userInfo.user.realName}}</span>
-          <x-button mini :gradients="['#1D62F0', '#19D5FD']" @click.native="_click" style="border-radius:99px;margin: 0px -18px 2px 41px;">安全退出</x-button>
+          <img style="display:inline-block;float:left;margin-left:5px;" src="./assets/user.png"/>
+          <span style="display:inline-block;color:white;font-size:14px;">{{userInfo.user.realName}}</span>
+          <br/>
+          <x-button mini :gradients="['#1D62F0', '#19D5FD']" @click.native="_click" style="border-radius:99px;margin:18px 1px;font-size:14px;">安全退出</x-button>
         </div>
         <group title="菜单" style="margin-top:20px;">
           <cell title="系统设置" link="/systemConfig" value="" @click.native="drawerVisibility = false">
